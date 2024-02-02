@@ -1,0 +1,81 @@
+body {
+  background: #fafafa;
+  color: #333333;
+  margin-top: 5rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #441d30; /* Pink text for headings */
+}
+
+.bg-steel {
+  background-color: rgb(134, 0, 43); /* Pink background for steel */
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #ffb6c1; /* Light pink text for navbar links */
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff; /* White text on hover */
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: rgba(255, 192, 203, 0.39); /* Light pink background */
+  padding: 10px 20px;
+  border: 1px solid rgba(211, 14, 57, 0.13);
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #86002b; /* Deep pink text for article titles */
+}
+
+a.article-title:hover {
+  color: #ff69b4; /* Lighter pink on hover */
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #ffc0cb;
+}
+
+.article-metadata a:hover {
+  color: #ffabab; /* Lighter pink on hover */
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+
