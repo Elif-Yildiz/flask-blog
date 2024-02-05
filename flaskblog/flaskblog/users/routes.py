@@ -1,9 +1,9 @@
 from flask import Blueprint
 from datetime import datetime
 
-from flaskblog.models import User, Post
+from flaskblog.models import User, Post, ActiveUsers
 from flask import Flask, render_template, url_for, flash, request, redirect
-from flaskblog import db, mail #,app
+from flaskblog import db
 from flask_login import login_user, logout_user, current_user, login_required
 import hashlib
 import os
@@ -32,7 +32,7 @@ def register():
         user = User(username=form.username.data,
                     email=form.email.data,
                     password=hashed_password,
-                    active=True,
+                    active=False,
                     firstname=form.firstname.data,
                     lastname=form.lastname.data,
                     middlename=form.middlename.data,
@@ -58,6 +58,11 @@ def login():
         if user is not None and user.password == hashed_password:
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
+
+            active_user = ActiveUsers(user_id=user.id, login_time=datetime.utcnow(), ip=request.remote_addr)
+            db.session.add(active_user)
+            db.session.commit()
+
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful!', 'danger')
@@ -66,6 +71,12 @@ def login():
 
 @users.route("/logout")
 def logout():
+    # Remove user from ActiveUsers table
+    if current_user.is_authenticated:
+        active_user = ActiveUsers.query.filter_by(user_id=current_user.id).first()
+        if active_user:
+            db.session.delete(active_user)
+            db.session.commit()
     logout_user()
     return redirect(url_for('main.home'))
 

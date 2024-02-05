@@ -22,8 +22,9 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     salt = db.Column(db.String(60), nullable=False)
-    active = db.Column(db.Boolean, nullable=False, default=True)
+    active = db.Column(db.Boolean, nullable=False, default=False)
     posts = db.relationship('Post', backref='author', lazy=True)
+    online = db.relationship('ActiveUsers', backref='online', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):  # 30 mins
         salt = os.urandom(16)
@@ -52,3 +53,12 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
+
+
+class ActiveUsers(db.Model, UserMixin):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, primary_key=True)
+    login_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    ip = db.Column(db.String(15), nullable=False)#unique=True,
+
+    def __repr__(self):
+        return f"User('{self.login_time}', '{self.ip}')"

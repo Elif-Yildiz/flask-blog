@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Active Users</h1>
+    {% for activeuser in activeusers %}
+        <article class="media content-section">
+            <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + activeuser.online.image_file) }}">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <h2>{{ activeuser.online.username }}</h2>
+                </div>
+                <small class="text-muted">Login time: {{ activeuser.login_time.strftime('%Y-%m-%d') }}</small>
+            </div>
+
+        </article>
+    {% endfor %}
+{% endblock content %}
