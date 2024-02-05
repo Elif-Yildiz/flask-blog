@@ -108,6 +108,11 @@ def user_posts(username):
     posts = Post.query.filter_by(author=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=5)
     return render_template('user_posts.html', posts=posts, user=user)
 
+@users.route("/user/list")
+def user_list():
+    users = User.query.all()
+    posts = Post.query.all()
+    return render_template('user_list.html', users=users, posts=posts)
 
 @users.route("/reset_password", methods=['GET', 'POST'])
 def reset_request():

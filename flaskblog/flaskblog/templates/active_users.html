@@ -6,7 +6,7 @@
             <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + activeuser.online.image_file) }}">
             <div class="media-body">
                 <div class="article-metadata">
-                    <h2>{{ activeuser.online.username }}</h2>
+                    <h2><a class="article-title" href="{{ url_for('users.user_posts', username=activeuser.online.username)}}"> {{ activeuser.online.username }}</a></h2>
                 </div>
                 <small class="text-muted">Login time: {{ activeuser.login_time.strftime('%Y-%m-%d') }}</small>
             </div>
