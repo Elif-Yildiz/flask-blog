@@ -1,15 +1,15 @@
-from flask import Blueprint
+from flask import Blueprint, current_app, session
 from datetime import datetime
 
-from flaskblog.models import User, Post
+from flaskblog.models import User, Post, ActiveUsers
 from flask import Flask, render_template, url_for, flash, request, redirect
-from flaskblog import app, db, mail
-from flask_login import login_user, logout_user, current_user, login_required
+from flaskblog import db
+from flask_login import login_user, logout_user, current_user, login_required, session_protected
 import hashlib
 import os
 
 from flaskblog.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm
-from flaskblog.users.utils import save_picture, send_reset_email
+from flaskblog.users.utils import save_picture, send_reset_email, send_notification_email
 
 users = Blueprint('users', __name__)
 
@@ -32,7 +32,7 @@ def register():
         user = User(username=form.username.data,
                     email=form.email.data,
                     password=hashed_password,
-                    active=True,
+                    active=False,
                     firstname=form.firstname.data,
                     lastname=form.lastname.data,
                     middlename=form.middlename.data,
@@ -41,6 +41,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f'{form.username.data}, your account has been created!You can log in.', 'success')
+        current_app.logger.info(f"A NEW ACCOUNT HAS BEEN CREATED: {user.username}")#LOG
         return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -58,15 +59,36 @@ def login():
         if user is not None and user.password == hashed_password:
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
+
+            active_user = ActiveUsers(user_id=user.id, login_time=datetime.utcnow(), ip=request.remote_addr)
+            db.session.add(active_user)
+            db.session.commit()
+            current_app.logger.info(f"USER {user.username}:{user.id} logged in")#LOG
+            session.pop('login_attempts', None)
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful!', 'danger')
+            current_app.logger.info(f"USER FAILED TO LOG IN, Entered Password: {entered_password}")#LOG
+            # Increment the login attempt counter
+            session['login_attempts'] = session.get('login_attempts', 0) + 1
+            # Inform user after 3 unsuccessful login attempts
+            if session.get('login_attempts') >= 3:
+                # Send notification to the user
+                send_notification_email(request.form['email'])
+                flash('OPEN UP FBI!', 'danger')
     return render_template('login.html', title='Login', form=form)
 
 
 @users.route("/logout")
 def logout():
+    # Remove user from ActiveUsers table
+    if current_user.is_authenticated:
+        active_user = ActiveUsers.query.filter_by(user_id=current_user.id).first()
+        if active_user:
+            db.session.delete(active_user)
+            db.session.commit()
     logout_user()
+    current_app.logger.info(f"USER LOGGED OUT")#LOG
     return redirect(url_for('main.home'))
 
 
@@ -98,34 +120,44 @@ def user_posts(username):
     return render_template('user_posts.html', posts=posts, user=user)
 
 
+@users.route("/user/list")
+def user_list():
+    users = User.query.all()
+    posts = Post.query.all()
+    return render_template('user_list.html', users=users, posts=posts)
+
+
 @users.route("/reset_password", methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
+        current_app.logger.info(f"RESET MAIL SENT")  # LOG
         flash('An email has been sent with instructions to reset your password.', 'info')
-        return redirect(url_for('login'))
+        return redirect(url_for('users.login'))
     return render_template('reset_request.html', title='Reset Password', form=form)
 
 
 @users.route("/reset_password/<reset_token>", methods=['GET', 'POST'])
 def reset_token(reset_token):
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     user = User.verify_reset_token(reset_token)
     if user is None:
         flash('That is an invalid or expired token', 'warning')
-        return redirect(url_for('reset_request'))
+        return redirect(url_for('users.reset_request'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
         salt = os.urandom(16)
         password = form.password.data.encode('utf-8')
         hashed_password = hashlib.sha256(salt + password).hexdigest()
         user.password = hashed_password
+        user.salt = salt
         db.session.commit()
+        current_app.logger.info(f"PASSWORD HAS BEEN CHANGED")  # LOG
         flash('Your password has been updated! You are now able to log in', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('users.login'))
     return render_template('reset_token.html', title='Reset Password', form=form)

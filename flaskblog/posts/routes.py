@@ -1,9 +1,9 @@
-from flask import Blueprint
+from flask import Blueprint, current_app
 
 from flaskblog.models import User, Post
 from flask import Flask, render_template, url_for, flash, request, redirect, abort
 
-from flaskblog import app, db, mail
+from flaskblog import db, mail#,app
 from flask_login import login_user, logout_user, current_user, login_required
 
 from flaskblog.posts.forms import PostForm
@@ -19,6 +19,7 @@ def new_post():
         post = Post(title=form.title.data, content=form.content.data, author=current_user)
         db.session.add(post)
         db.session.commit()
+        current_app.logger.info(f"USER CREATED A NEW POST")  # LOG
         flash('Your post has been created!', 'success')
         return redirect(url_for('main.home'))
     return render_template('create_post.html', title='New Post', form=form, legend='New Post')
@@ -42,6 +43,7 @@ def update_post(post_id):
         post.title = form.title.data
         post.content = form.content.data
         db.session.commit()
+        current_app.logger.info(f"USER UPDATED A POST")  # LOG
         flash('Your post has been updated!!', 'success')
         return redirect(url_for('posts.post', post_id=post.id))
     elif request.method == 'GET':
@@ -59,6 +61,7 @@ def delete_post(post_id):
 
     db.session.delete(post)
     db.session.commit()
+    current_app.logger.info(f"USER DELETED A POST")  # LOG
     flash('Your post has been deleted!! '
           'What is seen cannot be unseen >~<', 'success')
     return redirect(url_for('main.home'))

@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flaskblog.models import User, Post
-from flask import render_template,request
+from flask import render_template, request
 
 main = Blueprint('main', __name__)
 
@@ -16,3 +16,7 @@ def home():
 @main.route("/about")
 def about():
     return render_template('about.html', title='About')
+
+@main.route("/etc")
+def etc():
+    return render_template('coming_soon.html', title='Etc')

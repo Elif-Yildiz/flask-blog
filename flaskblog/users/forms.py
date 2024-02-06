@@ -1,3 +1,4 @@
+import re
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
@@ -31,10 +32,23 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('Email is taken. Please choose a different one.')
 
+    def validate_password(self, password):
+
+        if len(password.data) < 8:
+            raise ValidationError('Password must be at least 8 characters long.')
+
+        if not re.search(r'[A-Z]', password.data):
+            raise ValidationError('Password must contain at least one uppercase letter.')
+
+        if not re.search(r'[a-z]', password.data):
+            raise ValidationError('Password must contain at least one lowercase letter.')
+
+        if not re.search(r'[0-9]', password.data):
+            raise ValidationError('Password must contain at least one digit.')
+
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')

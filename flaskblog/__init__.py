@@ -1,33 +1,57 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import hashlib
-import os
 from flask_login import LoginManager
 from flask_mail import Mail
+from flaskblog.config import Config
+from flask_restful import Resource, Api
+import logging
 
-app = Flask(__name__)
-
-app.config['SECRET_KEY'] = 'c0e5d47ecba2b7d97e9434b3f688c629'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-
-db = SQLAlchemy(app)
-login_manager = LoginManager(app)
+db = SQLAlchemy()
+login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = '_info_'
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USERNAME'] = 'elify2258@gmail.com'
-app.config['MAIL_PASSWORD'] = 'ozvn lqna ouhp xxhk '
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_DEFAULT_SENDER'] = 'elify2258@gmail.com'
-mail = Mail(app)
-#env dosyasına gizli bilgilerini koy
+mail = Mail()
+logger = logging.getLogger()
+logFormatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
 
-from flaskblog.users.routes import users
-from flaskblog.posts.routes import posts
-from flaskblog.main.routes import main
+# add console handler to the root logger
+consoleHanlder = logging.StreamHandler()
+consoleHanlder.setFormatter(logFormatter)
+logger.addHandler(consoleHanlder)
 
-app.register_blueprint(users)
-app.register_blueprint(posts)
-app.register_blueprint(main)
+# add file handler to the root logger
+fileHandler = logging.FileHandler("logs.log")
+fileHandler.setFormatter(logFormatter)
+logger.addHandler(fileHandler)
+
+
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+    api = Api(app)
+
+    db.init_app(app)
+    login_manager.init_app(app)
+    mail.init_app(app)
+
+    from flaskblog.users.routes import users
+    from flaskblog.posts.routes import posts
+    from flaskblog.main.routes import main
+    from flaskblog.errors.handlers import errors
+    from flaskblog.activeusers.routes import activeusers
+
+    app.register_blueprint(users)
+    app.register_blueprint(posts)
+    app.register_blueprint(main)
+    app.register_blueprint(errors)
+    app.register_blueprint(activeusers)
+
+    return app
+
+# todo end pointleri degistir/restful a geç
+# todo data formatını json olarak değiştir
+
+# todo postsql e geç
+
+# todo ngix ile herkese aç
+# https://www.youtube.com/watch?v=_Nq_n6Uk8WA

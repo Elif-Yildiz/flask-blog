@@ -5,19 +5,19 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #444444;
+  color: #441d30; /* Pink text for headings */
 }
 
 .bg-steel {
-  background-color: #5f788a;
+  background-color: rgb(134, 0, 43); /* Pink background for steel */
 }
 
 .site-header .navbar-nav .nav-link {
-  color: #cbd5db;
+  color: #ffb6c1; /* Light pink text for navbar links */
 }
 
 .site-header .navbar-nav .nav-link:hover {
-  color: #ffffff;
+  color: #ffffff; /* White text on hover */
 }
 
 .site-header .navbar-nav .nav-link.active {
@@ -25,19 +25,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .content-section {
-  background: #ffffff;
+  background: rgba(255, 192, 203, 0.39); /* Light pink background */
   padding: 10px 20px;
-  border: 1px solid #dddddd;
+  border: 1px solid rgba(211, 14, 57, 0.13);
   border-radius: 3px;
   margin-bottom: 20px;
 }
 
 .article-title {
-  color: #444444;
+  color: #86002b; /* Deep pink text for article titles */
 }
 
 a.article-title:hover {
-  color: #428bca;
+  color: #ff69b4; /* Lighter pink on hover */
   text-decoration: none;
 }
 
@@ -54,11 +54,11 @@ a.article-title:hover {
 .article-metadata {
   padding-bottom: 1px;
   margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3
+  border-bottom: 1px solid #ffc0cb;
 }
 
 .article-metadata a:hover {
-  color: #333;
+  color: #ffabab; /* Lighter pink on hover */
   text-decoration: none;
 }
 
@@ -78,3 +78,4 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
