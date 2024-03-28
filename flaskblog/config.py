@@ -17,3 +17,11 @@ class Config:
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_USE_SSL = True
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
+    hcaptcha_SITE_KEY = os.getenv('hcaptcha_SITE_KEY')
+    hcaptcha_SECRET_KEY = os.getenv('hcaptcha_SECRET_KEY')
+    h_VERIFY_URL = os.getenv('h_VERIFY_URL')
+    reCAPTCHA_SITE_KEY = os.getenv('reCAPTCHA_SITE_KEY')
+    reCAPTCHA_SECRET_KEY = os.getenv('reCAPTCHA_SECRET_KEY')
+    reCAPTCHA_VERIFY_URL = os.getenv('reCAPTCHA_VERIFY_URL')
+    RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')  # for using recaptcha v2
+    RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')  # for using recaptcha v2

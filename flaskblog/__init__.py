@@ -4,6 +4,9 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flaskblog.config import Config
 from flask_restful import Resource, Api
+from flask_hcaptcha import hCaptcha
+
+
 import logging
 
 db = SQLAlchemy()
@@ -15,14 +18,17 @@ logger = logging.getLogger()
 logFormatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
 
 # add console handler to the root logger
-consoleHanlder = logging.StreamHandler()
-consoleHanlder.setFormatter(logFormatter)
-logger.addHandler(consoleHanlder)
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logFormatter)
+logger.addHandler(consoleHandler)
 
 # add file handler to the root logger
 fileHandler = logging.FileHandler("logs.log")
 fileHandler.setFormatter(logFormatter)
 logger.addHandler(fileHandler)
+
+
+# capthca
 
 
 def create_app(config_class=Config):

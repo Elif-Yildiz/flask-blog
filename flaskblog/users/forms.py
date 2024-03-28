@@ -1,5 +1,5 @@
 import re
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from wtforms.fields.simple import BooleanField
@@ -22,16 +22,22 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
+    #check if user name is valid
     def validate_username(self, username):
+
+        if re.search(r'[\/\\&|]', username.data):
+            raise ValidationError('Username cannot contain "/", "\", "&", or "|". Please choose a different one.')
         user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username is taken. Please choose a different one.')
 
+    ##check if mail is valid
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Email is taken. Please choose a different one.')
 
+    #check password req, 8> 1uppercase 1lowercase 1digit
     def validate_password(self, password):
 
         if len(password.data) < 8:
@@ -45,6 +51,8 @@ class RegistrationForm(FlaskForm):
 
         if not re.search(r'[0-9]', password.data):
             raise ValidationError('Password must contain at least one digit.')
+
+    recaptcha = RecaptchaField()
 
 
 class LoginForm(FlaskForm):
@@ -62,6 +70,9 @@ class UpdateAccountForm(FlaskForm):
 
     def validate_username(self, username):
         if username.data != current_user.username:
+            if re.search(r'[\/\\&|]', username.data):
+                raise ValidationError('Username cannot contain "/", "\", "&", or "|". Please choose a different one.')
+
             user = User.query.filter_by(username=username.data).first()
             if user:
                 raise ValidationError('Username is taken. Please choose a different one.')
@@ -81,6 +92,8 @@ class RequestResetForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is None:
             raise ValidationError('No such user')
+
+    recaptcha = RecaptchaField()
 
 
 class ResetPasswordForm(FlaskForm):

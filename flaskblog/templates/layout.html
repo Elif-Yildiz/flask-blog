@@ -1,20 +1,43 @@
 <!DOCTYPE html>
+
+
+<!--  <i class="fa-regular fa-thumbs-down fa-bounce" style="color: #cc0000;"></i>  thumbs down empty-->
+<!--   <i class="fa-solid fa-thumbs-down fa-fade" style="color: #ef2929;"></i> thumbs down full-->
+<!--  <i class="fa-solid fa-heart-crack fa-beat-fade" style="color: #cc0000;"></i> broken heart-->
+<!--  <i class="fa-solid fa-radiation fa-spin" style="color: #000000;"></i> radiation -->
+<!--   <i class="fa-solid fa-circle-info" style="color: #ad7fa8;"> info-->
+<!--   <i class="fa-solid fa-skull fa-bounce"></i> skull-->
+
+
+
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,shrink-to-fit=no">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-
-
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script src="https://kit.fontawesome.com/a62af28f58.js" crossorigin="anonymous"></script>
     {% if title %}
-        <title>Hell Blog - {{ title }}</title>
+    <title>Hell Blog - {{ title }}</title>
+    {% if title == 'secret' %}
+        <link rel="icon" type="image/x-icon" href="/static/profile_pics/secret.png">
+    {% elif title == 'Gate' %}
+        <link rel="icon" type="image/x-icon" href="/static/profile_pics/gate.png">
+    {% else %}
+        <link rel="icon" type="image/x-icon" href="/static/profile_pics/icons8-star-filled-64.png">
+    {% endif %}
     {% else %}
         <title>Hell Blog</title>
+        <link rel="icon" type="image/x-icon" href="/static/profile_pics/icons8-star-filled-64.png">
     {% endif %}
-    <title>Hell Blog</title>
+
+    <script>
+       function onSubmit(token) {
+         document.getElementById("login-form").submit();
+       }
+    </script>
 </head>
 <body>
 
@@ -67,7 +90,9 @@
                 <li class="list-group-item list-group-item-light"><a href="{{ url_for('main.home', page=1) }}">Latest Posts</a></li>
                 <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_list')}}">All Users</a></li>
                 <li class="list-group-item list-group-item-light"><a href="{{url_for('activeusers.active_users')}}">Active Users</a></li>
-                <li class="list-group-item list-group-item-light"><a href="{{url_for('main.etc')}}">etc</a></li>
+                <li class="list-group-item list-group-item-light"><a href="{{url_for('main.music')}}">Music</a></li>
+                <li class="list-group-item list-group-item-light"><a href="{{ url_for('main.etc') }}">etc</a></li>
+                 <li class="list-group-item list-group-item-light"><a href="{{ url_for('main.etc') }}">Hell Star:ACtk</a></li>
               </ul>
             </p>
           </div>

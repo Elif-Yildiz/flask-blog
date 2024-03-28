@@ -17,6 +17,22 @@ def home():
 def about():
     return render_template('about.html', title='About')
 
+
+@main.route("/music")
+def music():
+    return render_template('music.html', title='Music')
+
+
 @main.route("/etc")
 def etc():
-    return render_template('coming_soon.html', title='Etc')
+    return render_template('gate.html', title='Gate')
+
+
+@main.route("/secret")
+def secret():
+    return render_template('secret.html', title='secret')
+
+
+@main.route("/test", methods=['GET', 'POST'])
+def test():
+    return render_template('test.html', title='CaptchaTest')

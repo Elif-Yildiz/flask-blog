@@ -25,17 +25,17 @@ class User(db.Model, UserMixin):
     active = db.Column(db.Boolean, nullable=False, default=False)
     posts = db.relationship('Post', backref='author', lazy=True)
     online = db.relationship('ActiveUsers', backref='online', lazy=True)
+    dislikes = db.relationship('Dislikes', backref='user', passive_deletes=True)
 
-    def get_reset_token(self, expires_sec=1800):  # 30 mins
-        salt = os.urandom(16)
-        s = Serializer(current_app.config['SECRET_KEY'])
+    def get_reset_token(self, expires_sec=1800):  # creating a reset token
+        s = Serializer(current_app.config['SECRET_KEY'])  # creating token with app'secret key
         return s.dumps({'user_id': self.id})
 
     @staticmethod
     def verify_reset_token(reset_token, expires_sec=1800):  # 30 mins
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            user_id = s.loads(reset_token, max_age=expires_sec)['user_id']
+            user_id = s.loads(reset_token, max_age=expires_sec)['user_id']  # check if they match
         except:
             return None
         return User.query.get(user_id)
@@ -50,6 +50,7 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    dislikes = db.relationship('Dislikes', backref='post', passive_deletes=True)
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
@@ -58,7 +59,17 @@ class Post(db.Model):
 class ActiveUsers(db.Model, UserMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, primary_key=True)
     login_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    ip = db.Column(db.String(15), nullable=False)#unique=True,
+    ip = db.Column(db.String(15), nullable=False)  # unique=True,
 
     def __repr__(self):
         return f"User('{self.login_time}', '{self.ip}')"
+
+
+class Dislikes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"), nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"Dislike('{self}"

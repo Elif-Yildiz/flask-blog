@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    #main {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    #main p {
+        margin-top: 20px; /* Adjust the margin as needed */
+    }
+</style>
+<script>
+function init() {
+    var h1 = document.getElementById('js');
+    var delay = 10000;
+
+    setTimeout(function() {
+        h1.innerHTML = "This is taking a bit longer than planned. Stand by, please.";
+
+        setTimeout(function() {
+            h1.innerHTML = "Thank you for your patience.";
+
+            setTimeout(function() {
+                h1.innerHTML = "Contacting Angels.";
+
+                setTimeout(function() {
+                    h1.innerHTML = "Just a little longer.";
+
+                    setTimeout(function() {
+                        h1.innerHTML = "Hmm this is odd..";
+
+                        setTimeout(function() {
+                            h1.innerHTML = "We really apologize, god is not answering...";
+
+                            setTimeout(function() {
+                                h1.innerHTML = "So... how was your day so far ?";
+
+                                setTimeout(function() {
+                                    h1.innerHTML = "You're still here ?";
+
+                                    setTimeout(function() {
+                                        h1.innerHTML = "Gates of heaven will be open soon...";
+
+                                        setTimeout(function() {
+                                            h1.innerHTML = "Well, we admire your patience.";
+
+                                            setTimeout(function() {
+                                                h1.innerHTML = "Ah there is a response!";
+
+                                                setTimeout(function() {
+                                                    h1.innerHTML = "Hmm, it says you can not enter heaven...";
+
+                                                    setTimeout(function() {
+                                                        h1.innerHTML = "...I am sorry  :(";
+
+                                                        setTimeout(function() {
+                                                            h1.innerHTML = "Well actually I am not :p,  I made you wait and never sent anything MUHAHAHAHAAHAHA";
+
+                                                            setTimeout(function() {
+                                                                h1.innerHTML = "You've been waiting for " + Math.round(((13 * delay) / 1000) / 60) + " minutes, and still staying in hell. I am pure evil right ?";
+
+                                                                setTimeout(function() {
+                                                                    window.location.href = 'http://24.media.tumblr.com/tumblr_m5jhpwrqmx1qii6tmo1_250.gif';
+                                                                }, delay);
+                                                            }, delay);
+                                                        }, delay);
+                                                    }, delay);
+                                                }, delay);
+                                            }, delay);
+                                        }, delay);
+                                    }, delay);
+                                }, delay);
+                            }, delay);
+                        }, delay);
+                    }, delay);
+                }, delay);
+            }, delay);
+        }, delay);
+    }, delay);
+}
+</script>
+
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40644815-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' === document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+<body onLoad="init()">
+    <!--
+    If you're seeing this, then you got a chance to visit our secret place.
+    Add "/secret" and find out.
+    -->
+    <div id="main">
+        <h1 id="js">Transferring you to heaven, please wait</h1>
+        <p><img src="/static/profile_pics/loader.gif"/></p>
+    </div>
+</body>
+
+{% endblock content %}

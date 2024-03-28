@@ -31,7 +31,7 @@ def send_reset_email(user):
     reset_token = user.get_reset_token()
     msg = Message('Password Reset Request', recipients=[user.email])
     msg.body = f'''To reset your password, click on the link below:
-    {url_for('users.reset_token', sender='elify2258@gmail.com', reset_token=reset_token, _external=True)}
+    {url_for('users.reset_token', sender='hosts2661@gmail.com', reset_token=reset_token, _external=True)}
 
     If you did not make this request then simply ignore this email.
     '''  # can also use jinja2 template, look for that maybe?

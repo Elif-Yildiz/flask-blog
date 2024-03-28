@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
        <div class="content-section">
-           <form method="POST" action="" novalidate>
+           <form id ="login-form" method="POST" action="" novalidate>
                {{ form.hidden_tag() }}
                <fieldset class="form-group">
                    <legend class="border-bottom mb-4">
@@ -49,7 +49,13 @@
                    </div>
                </fieldset>
                <div class="form-group">
-                    {{ form.submit(class="btn-outline-info") }}
+                    <!--{{ form.submit(class="btn-outline-info") }} -->
+                       <button class="g-recaptcha btn btn-outline-info"
+                        data-sitekey="6Le1GaUpAAAAAErAVhJUs5FZtRFC3zHTapvhWUJR"
+                        data-callback='onSubmit'
+                        data-action='submit'>Submit
+                       </button>
+
                </div>
 
                <small class="text-muted ml-2">

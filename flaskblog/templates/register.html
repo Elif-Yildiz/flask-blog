@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
        <div class="content-section">
-           <form method="POST" action="" novalidate>
+           <form id="register-form" method="POST" action="" novalidate>
                {{ form.hidden_tag() }}
                <fieldset class="form-group">
                    <legend class="border-bottom mb-4">
@@ -74,10 +74,10 @@
                    </div>
 
                    <div class="form-group">
-                       {{ form.birthdate.label(class="form-control-label") }}
+                        {{ form.birthdate.label(class="form-control-label") }}
 
-                       {% if form.birthdate.errors %}
-                            {{ form.birthdate(class="form-control form-control-lg is-invalid")}}
+                        {% if form.birthdate.errors %}
+                            {{ form.birthdate(class="form-control form-control-lg is-invalid", placeholder="YYYY-MM-DD") }}
                             <div class="invalid-feedback">
                                 {% for error in form.birthdate.errors %}
                                     <span>
@@ -85,10 +85,11 @@
                                     </span>
                                 {% endfor %}
                             </div>
-                       {% else %}
-                            {{ form.birthdate(class="form-control form-control-lg") }}
-                       {% endif %}
+                        {% else %}
+                            {{ form.birthdate(class="form-control form-control-lg", placeholder="YYYY-MM-DD") }}
+                        {% endif %}
                    </div>
+
 
                    <div class="form-group">
                        {{ form.email.label(class="form-control-label") }}
@@ -142,7 +143,11 @@
                    </div>
                </fieldset>
                <div class="form-group">
-                    {{ form.submit(class="btn-outline-info") }}
+                   {{ form.submit(class="btn-outline-info") }}
+               </div>
+
+               <div class="form-group">
+                    {{ form.recaptcha }}
                </div>
 
            </form>
